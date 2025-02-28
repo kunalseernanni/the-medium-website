@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import { sign } from 'hono/jwt'
+import { sign, verify } from 'hono/jwt'
 
 
 // Create the main Hono app
@@ -12,6 +12,35 @@ const app = new Hono<{
    }
    
 }>();
+
+
+app.route("/api/v1/user", userRouter);
+app.route("/api/v1/blog", blogRouter);
+
+// app.use('/api/v1/blog/*', async (c, next) => {
+//   //get the header
+//   //verify the geader
+//   //if the header is correct, we need can proceed
+//   //if not , we return 403
+
+//   const header = c.req.header('Authorization') || "";
+//   //Bearer token => ["Bearer", "token"]
+//   const token = header.split(" ")[1];
+//   if(!header){
+//     c.status(401);
+//     return c.json({ error: "unauthorized" });
+//   }
+//   const response = await verify(header, c.env.JWT_SECRET);
+
+//   if(response.id){
+//     next()
+//   }
+//   else{
+//     c.status(403);
+//     return c.json({ error: "unauthorized" });
+//   }
+
+// })
 
 app.post('/api/v1/signup', async (c) => {
 	const prisma = new PrismaClient({
@@ -26,7 +55,7 @@ app.post('/api/v1/signup', async (c) => {
 				password: body.password
 			}
 		});
-		const token = await sign({ id: user.id }, "secret");
+		const token = await sign({ id: user.id }, c.env.JWT_SECRET);
 		return c.json({ jwt:token });
 	} catch(e) {
 		c.status(403);
@@ -51,7 +80,7 @@ app.post('/api/v1/signin', async (c) => {
     c.status(403);
     return c.json({ error: "user not found" });
   }
-  const token = await sign({id: user.id}, "secret")
+  const token = await sign({id: user.id}, c.env.JWT_SECRET);
   return c.json({
     jwt: token,
     message: "success"
