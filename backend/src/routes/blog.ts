@@ -79,7 +79,7 @@ blogRouter.get('/user/:id', async(c) => {
     try{
         const blog = await prisma.post.findMany({
             where:{
-                authorId: Number(id)
+                id: Number(id)
             }
         })
         return c.json({
