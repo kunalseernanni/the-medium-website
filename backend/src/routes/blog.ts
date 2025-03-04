@@ -27,7 +27,7 @@ blogRouter.use("/*", async (c, next) => {
         c.status(401);
         return c.json({ error: "unauthorized" });
     }
-    c.set("userid", user.id);
+    c.set("userid", user.id as string);
     await next();
 });
 
