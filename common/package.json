@@ -1,14 +1,14 @@
 {
-  "name": "@kunalseernani/medium-common",
+  "name": "@kseernani/blog-common",
   "version": "1.0.2",
-  "main": "dist/index.ts",
+  "description": "",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "zod": "^3.24.2"
   }
